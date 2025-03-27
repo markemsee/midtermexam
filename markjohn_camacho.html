@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC Colleges Library Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+        }
+        .card {
+            border: 2px solid black;
+            padding: 10px;
+            width: 230px;
+            text-align: left;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border: 2px solid black;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-info {
+            width: 100%;
+        }
+        .user-info strong {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>ABC Colleges</h1>
+    <h2>Library Users</h2>
+    <div class="container" id="library-users"></div>
+    
+    <script>
+        const usersXML = `
+        <users>
+            <user>
+                <name>Evan H. Lujenyo</name>
+                <course>BSN</course>
+                <year>4</year>
+                <section>a-g2</section>
+                <advisor>Dr. Alexander Carter</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/39/97/c7/3997c72ede5ffde0aca42b4c649320f9.jpg</photo>
+            </user>
+            <user>
+                <name>Jake C. Balagtas</name>
+                <course>CHTM</course>
+                <year>3</year>
+                <section>a-g1</section>
+                <advisor>Prof. Sophia Martinez</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/4f/df/6d/4fdf6d03f039ac1573cc21d4be23739e.jpg</photo>
+            </user>
+            <user>
+                <name>William V. Cruz</name>
+                <course>BSIT</course>
+                <year>4</year>
+                <section>c-g2</section>
+                <advisor>Dr. Benjamin Lee</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/ab/70/13/ab7013c761d2c6806fb7e697061d034c.jpg</photo>
+            </user>
+            <user>
+                <name>John Joshua Z. Lapuz</name>
+                <course>BSIT</course>
+                <year>4</year>
+                <section>d-g2</section>
+                <advisor>Mr. Pedro Cruz</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/6d/cd/ad/6dcdad4bd8146aa36f7ce28402fd716b.jpg</photo>
+            </user>
+            <user>
+                <name>Jay Vince A. lee</name>
+                <course>BSIT</course>
+                <year>4</year>
+                <section>c-g2</section>
+                <advisor>Dr. Benjamin Lee</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/eb/0c/30/eb0c301908bb31c06450a299936749b2.jpg</photo>
+            </user>
+            <user>
+                <name>Nikky A. Vandermeer</name>
+                <course>BSIT</course>
+                <year>4</year>
+                <section>b-g1</section>
+                <advisor>Prof. Emily Thompson</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/f9/99/ae/f999aede14d1566f071efd4abe1778d4.jpg</photo>
+            </user>
+            <user>
+                <name>Steve P. Anderson Reyes</name>
+                <course>BSPSYCH</course>
+                <year>2</year>
+                <section>c-g2</section>
+                <advisor>Dr. Michael Robinson</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/8e/27/70/8e2770b5cedeca45d8edaf5b1bb18478.jpg</photo>
+            </user>
+            <user>
+                <name>Ruby Jane S. Choi</name>
+                <course>BSHM</course>
+                <year>1</year>
+                <section>g-g2</section>
+                <advisor>Prof. Olivia Hernandez</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/7f/54/ce/7f54ce6bfd1dc589604d885c98936077.jpg</photo>
+            </user>
+            <user>
+                <name>Dominique C. Valdez</name>
+                <course>BSME</course>
+                <year>2</year>
+                <section>g-g2</section>
+                <advisor>Dr. David Chen</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/ea/b2/bc/eab2bcbd781b0629a242cfada818d105.jpg</photo>
+            </user>
+            <user>
+                <name>Morigan Mae C.Batungbacal </name>
+                <course>BSCS</course>
+                <year>3</year>
+                <section>a-g2</section>
+                <advisor>Prof. Jessica Patel</advisor>
+                <schoolYear>2025-2026</schoolYear>
+                <photo>https://i.pinimg.com/736x/f5/67/53/f5675354c60bcf2f879ebf7131c3803b.jpg</photo>
+            </user>
+        </users>`;
+
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(usersXML, "text/xml");
+        const users = xmlDoc.getElementsByTagName("user");
+
+        let container = document.getElementById("library-users");
+
+        for (let i = 0; i < users.length; i++) {
+            let user = users[i];
+
+            let photoUrl = user.getElementsByTagName("photo")[0].textContent.trim();
+            
+            // Ensure image URL is valid; fallback if missing
+            if (!photoUrl || !photoUrl.startsWith("http")) {
+                photoUrl = "https://via.placeholder.com/50"; // Default fallback image
+            }
+
+            let userCard = document.createElement("div");
+            userCard.classList.add("card");
+            userCard.innerHTML = `
+                <img src="${photoUrl}" alt="User Photo" onerror="this.src='https://via.placeholder.com/50';">
+                <strong>${user.getElementsByTagName("name")[0].textContent}</strong>
+                <p><strong>Course:</strong> ${user.getElementsByTagName("course")[0].textContent}</p>
+                <p><strong>Year Level / Section:</strong> ${user.getElementsByTagName("year")[0].textContent}${user.getElementsByTagName("section")[0].textContent}</p>
+                <p><strong>Adviser:</strong> ${user.getElementsByTagName("advisor")[0].textContent}</p>
+                <p><strong>School Year:</strong> ${user.getElementsByTagName("schoolYear")[0].textContent}</p>
+            `;
+
+            container.appendChild(userCard);
+        }
+    </script>
+
+</body>
+</html>
